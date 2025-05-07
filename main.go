@@ -117,7 +117,14 @@ func redirectUrl(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/shorten", shortUrl)
-	http.HandleFunc("/", redirectUrl)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		http.ServeFile(w, r, "./index.html")
+		return
+	}
+	redirectUrl(w, r)
+    })
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
 	
 	fmt.Println("Server started at localhost:8080")
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
