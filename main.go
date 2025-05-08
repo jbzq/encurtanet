@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	urlStore = make(map[string]string)
-	mu sync.Mutex
-	secretKey = []byte("mysecretkey1234567654321")
+	urlStore    = make(map[string]string)
+	mu          sync.Mutex
+	secretKey   = []byte("mysecretkey1234567654321")
 	lettersRune = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 )
 
@@ -69,7 +69,7 @@ func generateShortId() string {
 		if err != nil {
 			log.Fatal(err)
 		}
-			
+
 		b[i] = lettersRune[num.Int64()]
 
 	}
@@ -88,7 +88,6 @@ func shortUrl(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	encryptedUrl := encrypt(originalUrl)
 	shortId := generateShortId()
 	mu.Lock()
@@ -96,7 +95,7 @@ func shortUrl(w http.ResponseWriter, r *http.Request) {
 	mu.Unlock()
 
 	shortUrl := fmt.Sprintf("http://localhost:8080/%s", shortId)
-	fmt.Fprintf(w, "Short URL: %s", shortUrl)
+	fmt.Fprintf(w, "%s", shortUrl)
 }
 
 func redirectUrl(w http.ResponseWriter, r *http.Request) {
@@ -118,14 +117,14 @@ func redirectUrl(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/shorten", shortUrl)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		http.ServeFile(w, r, "./index.html")
-		return
-	}
-	redirectUrl(w, r)
-    })
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
-	
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, "./index.html")
+			return
+		}
+		redirectUrl(w, r)
+	})
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
 	fmt.Println("Server started at localhost:8080")
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
