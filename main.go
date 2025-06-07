@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"os"
 )
 
 var (
@@ -115,16 +116,22 @@ func redirectUrl(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	http.HandleFunc("/shorten", shortUrl)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	https.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			http.ServeFile(w, r, "./index.html")
 			return
 		}
 		redirectUrl(w, r)
 	})
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
-	fmt.Println("Server started at localhost:8080")
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+
+	log.Printf("Server started at :%s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
