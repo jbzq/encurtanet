@@ -1,0 +1,32 @@
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert.success {
+    background-color: #10b981;
+}
+
+.alert.error {
+    background-color: #ef4444;
+}
+
+.alert.fade-out {
+    opacity: 0;
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
