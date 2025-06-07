@@ -122,7 +122,7 @@ func main() {
 	}
 
 	http.HandleFunc("/shorten", shortUrl)
-	https.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			http.ServeFile(w, r, "./index.html")
 			return
