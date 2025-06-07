@@ -4,43 +4,80 @@
 ![Go](https://img.shields.io/badge/Go-1.20+-00ADD8?logo=go)
 ![Status](https://img.shields.io/badge/status-In%20Development-yellow)
 
-> [!NOTE]
-> Este projeto não salva URLs encurtadas em um banco de dados ou arquivo. Todos as URLs encurtadas são armazenados na memória e serão perdidas quando o servidor for reiniciado.
->
-> O projeto foi projetado para ser executado localmente e não inclui configurações para implantação de produção.
->
+Um encurtador de URLs simples porém poderoso, construído em Go, com criptografia e interface web moderna.
 
-Um encurtador de urls simples escrito em golang
+> [!NOTE]
+> Este é um encurtador de URLs em memória. As URLs encurtadas são armazenadas na memória e serão perdidas quando o servidor reiniciar.
+>
+> Projetado principalmente para desenvolvimento local e testes. Não recomendado para uso em produção sem uma camada adicional de persistência.
 
 ## Funcionalidades
 
-* Encurtamento de URLs: Gera um identificador único para cada URL fornecida.
-* Redirecionamento: URLs encurtadas redirecionam para o endereço original.
-* Interface Simples: Inclui uma interface web para encurtar URLs diretamente no navegador.
-* Criptografia: URLs são armazenadas de forma criptografada na memória.
+* **Encurtamento de URLs**: Gera identificadores curtos e únicos para URLs longas
+* **Armazenamento seguro**: Criptografa URLs na memória usando AES
+* **Interface Web Moderna**:
+  * Formulário para encurtar URLs
+  * Funcionalidade de copiar
+  * Histórico de URLs encurtadas recentemente
+* **API Simples**: Fácil integração via endpoint REST
+* **Redirecionamentos**: URLs curtas redirecionam para os destinos originais
 
-## Como usar
+## Começando
 
-Para rodar o projeto, clone este repositorio
+### Pré-requisitos
+- Go 1.20+ instalado
+- Conhecimento básico de terminal
 
-Excute `go run main.go` e execute em outro terminal `curl localhost:8080/shorten?url=<https://sua-url>`;
+### Instalação
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/jbzq/encurtanet.git
+   cd encurtanet
+   ```
 
-por exemplo: `curl localhost:8080/shorten?url=https://www.google.com` ;
+2. Execute o Servidor:
+   ```bash
+   go run main.go
+   ```
 
-ou acesse no seu navegador: http://localhost:8080
+### Como Usar
+#### Interface Web
+Acesse a interface web em: http://localhost:8080
+
+#### Uso da API
+Encurte URLs via API:
+```bash
+curl "localhost:8080/shorten?url=https://sua-url-longa.com"
+```
+
+Exemplo:
+```bash
+curl "localhost:8080/shorten?url=https://www.google.com"
+```
+
+### Detalhes Técnicos
+
+Criptografia: Usa AES-CTR para armazenamento seguro na memória
+Geração de IDs Curtos: Cria identificadores aleatórios de 6 caracteres
+Gerenciamento de Memória: Usa sync.Mutex para operações thread-safe
 
 ## Limitações
 
-* Não Persistente: Este projeto não salva os encurtamentos em um banco de dados ou arquivo. Todas as URLs encurtadas são armazenadas apenas na memória e serão perdidas ao reiniciar o servidor.
-* Uso Local: O projeto foi projetado para rodar localmente e não inclui configurações para implantação em produção.
+Sem persistência: URLs são perdidas ao reiniciar o servidor
+Sem análises: Não conta cliques nas URLs
+Sem autenticação: Todos os usuários têm acesso igual
 
 ## Melhorias Futuras
 
-* Adicionar persistência com banco de dados (ex.: SQLite, PostgreSQL).
-* Implementar autenticação para gerenciar URLs encurtadas.
-* Criar uma API RESTful completa para integração com outros sistemas.
-* Adicionar suporte para métricas de uso (ex.: número de cliques em cada URL).
+Adicionar persistência em banco de dados (SQLite/PostgreSQL)
+Implementar autenticação de usuários
+Adicionar estatísticas de cliques
+Criar documentação da API REST
+Dockerizar a aplicação
+Adicionar limitação de taxa (rate limiting)
 
-## Licença
+### Contribuindo
+Contribuições são bem-vindas! Por favor abra uma issue ou pull request.
 
-Este projeto está licenciado sob a [`MIT License.`](/LICENSE)
+### Licença
+Este projeto está licenciado sob a [MIT License](/LICENSE).

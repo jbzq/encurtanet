@@ -1,60 +1,86 @@
 # encurtanet
 
-[`portuguese`](/README-pt.md)
+[`português`](/README-pt.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Go](https://img.shields.io/badge/Go-1.20+-00ADD8?logo=go)
 ![Status](https://img.shields.io/badge/status-In%20Development-yellow)
 
+A simple yet powerful URL shortener built with Go, featuring encryption and a modern web interface.
+
 > [!NOTE]
-> This project does not save shortened URLs in a database or file. All shortened URLs are stored in memory and will be lost when the server restarts.
+> This is an in-memory URL shortener. Shortened URLs are stored in memory and will be lost when the server restarts.
 >
-> The project is designed to run locally and does not include configurations for production deployment.
->
+> Designed primarily for local development and testing. Not recommended for production use without additional persistence layer.
 
 ## Features
 
-* URL Shortening: Generates a unique identifier for each provided URL.
-* Redirection: Shortened URLs redirect to the original address.
-* Simple Interface: Includes a web interface to shorten URLs directly in the browser.
-* Encryption: URLs are stored securely in memory using encryption.
+* **URL Shortening**: Generates short, unique identifiers for long URLs
+* **Secure Storage**: Encrypts URLs in memory using AES encryption
+* **Modern Web Interface**: Responsive UI with:
+  * URL shortening form
+  * Copy functionality
+  * History of recent shortened URLs
+* **Simple API**: Easy integration via REST endpoint
+* **Redirects**: Short URLs properly redirect to original destinations
 
-## How to Run the Project
+## Getting Started
 
-1. Clone this repository:
+### Prerequisites
+- Go 1.20+ installed
+- Basic terminal knowledge
 
+### Installation
+1. Clone the repository:
    ```bash
    git clone https://github.com/jbzq/encurtanet.git
    cd encurtanet
    ```
 
-2. Start the server:
+2. Run the Server:
+  ```bash
+  go run main.go
+  ``` 
 
-   ```bash
-   go run main.go
-   ```
+### Usage
 
-3. Shorten URLs via terminal:
+#### Web Interface
+Access the web interface at: http://localhost:8080
 
-   ```bash
-   curl localhost:8080/shorten?url=https://your-url
-   ```
+#### API Usage
+Shorten URLs via API:
 
-Exemple:
-   ```bash
-   curl localhost:8080/shorten?url=https://www.google.com
-   ```
+```bash
+curl "localhost:8080/shorten?url=https://your-long-url.com"
+```
 
-4. Access the web interface in your browser: http://localhost:8080
+Example:
 
+```bash
+curl "localhost:8080/shorten?url=https://www.google.com"
+```
 
-## Future Improvements
+### Technical Details
+* Encryption: Uses AES-CTR for URL storage in memory
+* Short ID Generation: Creates 6-character random identifiers
+* Memory Management: Uses sync.Mutex for thread-safe operations
 
-* Add persistence with a database (e.g., SQLite, PostgreSQL).
-* Implement authentication to manage shortened URLs.
-* Create a complete RESTful API for integration with other systems.
-* Add support for usage metrics (e.g., number of clicks per URL).
+### Limitations
+* No persistence: URLs are lost on server restart
+* No analytics: Doesn't track click counts
+* No authentication: All users have equal access
 
-## License
+### Future Improvements
 
-This project is licensed under the [MIT License.](/LICENSE)
+* Add database persistence (SQLite/PostgreSQL)
+* Implement user authentication
+* Add click analytics
+* Create REST API documentation
+* Dockerize application
+* Add rate limiting
+
+### Contributing
+Contributions are welcome! Please open an issue or pull request.
+
+### License
+This project is licensed under the [MIT License](/LICENSE).
