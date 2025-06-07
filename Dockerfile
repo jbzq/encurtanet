@@ -1,8 +1,9 @@
 # Build stage
-FROM golang:1.21 as builder
+FROM golang:1.24 as builder
 WORKDIR /app
-COPY . .
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o encurtanet
 
 # Execution stage
