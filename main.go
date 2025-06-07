@@ -95,7 +95,7 @@ func shortUrl(w http.ResponseWriter, r *http.Request) {
 	urlStore[shortId] = encryptedUrl
 	mu.Unlock()
 
-	shortUrl := fmt.Sprintf("http://jbzq.github.io/encurtanet/%s", shortId)
+	shortUrl := fmt.Sprintf("https://encurtanet.onrender.com/%s", shortId)
 	fmt.Fprintf(w, "%s", shortUrl)
 }
 
