@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sync"
 	
 	"encurtanet/backend/handlers"
@@ -19,31 +20,38 @@ func main() {
 	var (
 		urlStore = make(map[string]models.UrlData)
 		mu       sync.RWMutex
+		frontendDir = filepath.Join("frontend") // Caminho absoluto dentro do container
 	)
 
-	http.HandleFunc("/shorten", func(w http.ResponseWriter, r *http.Request) {
+	// Configuração do fileserver
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(frontendDir))))
+	
+	// Rotas da API
+	http.HandleFunc("/api/shorten", func(w http.ResponseWriter, r *http.Request) {
 		handlers.ShortenHandler(w, r, urlStore, &mu)
 	})
 	
-	http.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/stats", func(w http.ResponseWriter, r *http.Request) {
 		handlers.StatsHandler(w, r, urlStore, &mu)
 	})
 	
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
-	
+
+	// Rota principal
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" {
-			http.ServeFile(w, r, "../frontend/index.html")
+		// URL encurtada (6 caracteres)
+		if len(r.URL.Path) == 7 && r.URL.Path[0] == '/' {
+			handlers.RedirectHandler(w, r, urlStore, &mu)
 			return
 		}
-		handlers.RedirectHandler(w, r, urlStore, &mu)
+		
+		// Serve o frontend
+		http.ServeFile(w, r, filepath.Join(frontendDir, "index.html"))
 	})
 
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("../frontend"))))
-
-	log.Printf("Server started at :%s\n", port)
+	log.Printf("Server started on port :%s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

@@ -55,7 +55,8 @@ export class StatsDashboard {
         
         // Preparar dados para os gráficos
         const devicesData = {
-            labels: Object.keys(stats.datasets: [{
+            labels: Object.keys(stats.datasets),
+            datasets: [{
                 data: Object.values(stats.Devices),
                 backgroundColor: [
                     '#4cc9f0',
