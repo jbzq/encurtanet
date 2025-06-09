@@ -1,8 +1,8 @@
-* Importações */
-@import url('components/form.css');
-@import url('components/history.css');
-@import url('components/stats.css');
-@import url('utilities.css');
+/* Importações */
+@import url('/static/css/components/form.css');
+@import url('/static/css/components/history.css');
+@import url('/static/css/components/stats.css');
+@import url('/static/css/utilities.css');
 
 /* Estilos globais */
 * {
@@ -34,6 +34,7 @@ body {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
 header {
@@ -48,11 +49,13 @@ header {
     justify-content: center;
     gap: 15px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .logo i {
     font-size: 2.8rem;
     color: #4cc9f0;
+    transition: all 0.3s ease;
 }
 
 h1 {
@@ -62,6 +65,8 @@ h1 {
     background-clip: text;
     color: transparent;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    line-height: 1.2;
+    margin: 10px 0;
 }
 
 .subtitle {
@@ -86,6 +91,7 @@ section {
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     margin-bottom: 40px;
+    width: 100%;
 }
 
 section h2 {
@@ -100,22 +106,138 @@ section h2 {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
+/* Tablet Landscape e telas menores */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 15px;
+    }
+    
     section {
-        padding: 25px;
+        padding: 30px;
     }
     
     h1 {
-        font-size: 2.5rem;
+        font-size: 2.7rem;
     }
 }
 
-@media (max-width: 480px) {
+/* Tablet Portrait */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    section {
+        padding: 25px;
+        border-radius: 15px;
+    }
+    
+    h1 {
+        font-size: 2.3rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .logo i {
+        font-size: 2.3rem;
+    }
+    
+    section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+}
+
+/* Smartphones Grandes */
+@media (max-width: 600px) {
+    header {
+        padding: 20px 0;
+    }
+    
     h1 {
         font-size: 2rem;
+    }
+    
+    .logo {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    section {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+}
+
+/* Smartphones Pequenos */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
     }
     
     .logo i {
         font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    section {
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    section h2 {
+        font-size: 1.5rem;
+    }
+    
+    footer {
+        padding: 20px 0;
+        font-size: 0.9rem;
+    }
+}
+
+/* Telas muito pequenas (Galaxy Fold, etc) */
+@media (max-width: 350px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .logo i {
+        font-size: 1.8rem;
+    }
+    
+    section {
+        padding: 12px;
+    }
+    
+    section h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Orientação paisagem */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+        min-height: auto;
+    }
+    
+    .container {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    
+    header {
+        padding: 10px 0;
+        margin-bottom: 15px;
     }
 }
