@@ -12,22 +12,22 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Importar fonte Virgil do Excalidraw */
+@font-face {
+  font-family: "Virgil";
+  src: url("https://excalidraw.com/Virgil.woff2") format("woff2");
+  font-display: swap;
+}
+
 body {
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+    background: #050301;
     background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
     color: #fff;
     min-height: 100vh;
     padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 .container {
@@ -59,6 +59,7 @@ header {
 }
 
 h1 {
+    font-family: "Virgil", "Segoe UI Emoji", "Aplee Color Emoji", sans-serif;
     font-size: 3rem;
     background: linear-gradient(to right, #4cc9f0, #4361ee);
     -webkit-background-clip: text;
@@ -67,6 +68,9 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     line-height: 1.2;
     margin: 10px 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.5px;
 }
 
 .subtitle {
@@ -117,6 +121,7 @@ section h2 {
     }
     
     h1 {
+        font-family: "Virgil", "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
         font-size: 2.7rem;
     }
 }
@@ -133,6 +138,7 @@ section h2 {
     }
     
     h1 {
+        font-family: "Virgil", "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
         font-size: 2.3rem;
     }
     
@@ -157,6 +163,7 @@ section h2 {
     }
     
     h1 {
+        font-family: "Virgil", "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
         font-size: 2rem;
     }
     
@@ -178,6 +185,7 @@ section h2 {
     }
     
     h1 {
+        font-family: "Virgil", "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
         font-size: 1.8rem;
     }
     
