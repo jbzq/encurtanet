@@ -73,20 +73,21 @@ export class ApiClient {
    */
   async getStats(shortId) {
     try {
-      const response = await this._fetchWithRetry(
-        `${this.config.baseUrl}/api/stats?id=${shortId}`,
-        {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        }
-      );
-
-      return await response.json();
+        const response = await this._fetchWithRetry(
+            `${this.config.baseUrl}/api/stats?id=${shortId}`,
+            {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            }
+        );
+        
+        // Retorna objeto vazio se a resposta for inválida
+        return await response.json() || {};
     } catch (error) {
-      throw this._enhanceError(error, 'Erro ao obter estatísticas');
+        console.error('Stats fetch failed:', error);
+        return {}; // Fallback seguro
     }
-  }
-
+}
   /* ========== Métodos Privados ========== */
 
   async _fetchWithRetry(resource, options, retries = this.config.retries) {

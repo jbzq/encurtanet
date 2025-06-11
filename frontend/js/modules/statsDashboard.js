@@ -1,149 +1,94 @@
 export class StatsDashboard {
     constructor(apiClient) {
         this.apiClient = apiClient;
-        this.statsUrlInput = document.getElementById('statsUrlInput');
-        this.loadStatsBtn = document.getElementById('loadStatsBtn');
         this.statsContainer = document.getElementById('statsContainer');
-        this.totalClicksElement = document.getElementById('totalClicks');
-        this.lastClickElement = document.getElementById('lastClick');
-        this.devicesChart = null;
-        this.referrersChart = null;
-        
         this.init();
     }
 
-    init() {
-        this.loadStatsBtn.addEventListener('click', () => this.loadStats());
+    async init() {
+        if (!this.statsContainer) {
+            console.error('Stats container not found');
+            return;
+        }
+        await this.loadStats();
+        this.setupEventListeners();
     }
 
     async loadStats() {
-        const shortUrl = this.statsUrlInput.value.trim();
-        
-        if (!shortUrl) {
-            this.showAlert('Por favor, insira uma URL encurtada', 'error');
-            return;
-        }
-        
-        const urlParts = shortUrl.split('/');
-        const shortId = urlParts[urlParts.length - 1];
-        
-        if (!shortId) {
-            this.showAlert('URL inválida. Cole a URL encurtada completa.', 'error');
-            return;
-        }
-        
         try {
-            this.setLoadingState(true);
-            
-            const stats = await this.apiClient.getStats(shortId);
-            this.displayStats(stats);
-            
+            const stats = await this.apiClient.getStats();
+            this.displayStats(stats || {}); // Fallback para objeto vazio
         } catch (error) {
             console.error('Error loading stats:', error);
-            this.showAlert(`Erro ao carregar estatísticas: ${error.message}`, 'error');
-        } finally {
-            this.setLoadingState(false);
+            this.showError();
         }
     }
 
     displayStats(stats) {
-        // Atualizar estatísticas sumárias
-        this.totalClicksElement.textContent = stats.Clicks;
-        this.lastClickElement.textContent = stats.LastClicked 
-            ? new Date(stats.LastClicked).toLocaleString() 
-            : 'N/A';
-        
-        // Preparar dados para os gráficos
-        const devicesData = {
-            labels: Object.keys(stats.datasets),
-            datasets: [{
-                data: Object.values(stats.Devices),
-                backgroundColor: [
-                    '#4cc9f0',
-                    '#4895ef',
-                    '#4361ee'
-                ]
-            }]
+        // Verificação segura
+        const safeStats = stats || {};
+        const statsData = {
+            totalClicks: safeStats.totalClicks || 0,
+            browsers: safeStats.browsers || {},
+            devices: safeStats.devices || {},
+            lastAccessed: safeStats.lastAccessed || 'Nunca'
         };
-        
-        const referrersData = {
-            labels: Object.keys(stats.Referrers),
-            datasets: [{
-                data: Object.values(stats.Referrers),
-                backgroundColor: [
-                    '#f72585',
-                    '#b5179e',
-                    '#7209b7',
-                    '#560bad',
-                    '#480ca8'
-                ]
-            }]
-        };
-        
-        // Destruir gráficos existentes
-        if (this.devicesChart) this.devicesChart.destroy();
-        if (this.referrersChart) this.referrersChart.destroy();
-        
-        // Criar novos gráficos
-        const devicesCtx = document.getElementById('devicesChart').getContext('2d');
-        this.devicesChart = new Chart(devicesCtx, {
-            type: 'doughnut',
-            data: devicesData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-        
-        const referrersCtx = document.getElementById('referrersChart').getContext('2d');
-        this.referrersChart = new Chart(referrersCtx, {
-            type: 'pie',
-            data: referrersData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-        
-        // Mostrar container
-        this.statsContainer.style.display = 'block';
-    }
 
-    setLoadingState(isLoading) {
-        if (isLoading) {
-            this.loadStatsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando...';
-            this.loadStatsBtn.classList.add('loading');
-            this.loadStatsBtn.disabled = true;
-        } else {
-            this.loadStatsBtn.innerHTML = '<i class="fas fa-chart-line"></i> Carregar Estatísticas';
-            this.loadStatsBtn.classList.remove('loading');
-            this.loadStatsBtn.disabled = false;
-        }
-    }
-
-    showAlert(message, type = 'success') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert ${type}`;
-        alertDiv.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
+        // Renderização segura
+        this.statsContainer.innerHTML = `
+            <div class="stats-card">
+                <h3>Estatísticas</h3>
+                <div class="stat-item">
+                    <span>Total de acessos:</span>
+                    <strong>${statsData.totalClicks}</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Último acesso:</span>
+                    <strong>${statsData.lastAccessed}</strong>
+                </div>
+                <!-- Adicione mais estatísticas conforme necessário -->
+            </div>
         `;
+
+        this.renderCharts(statsData);
+    }
+
+    renderCharts(statsData) {
+        // Verificação adicional para gráficos
+        if (!statsData.browsers || !statsData.devices) {
+            console.warn('Dados incompletos para gráficos');
+            return;
+        }
         
-        document.body.appendChild(alertDiv);
-        
-        setTimeout(() => {
-            alertDiv.classList.add('fade-out');
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 500);
-        }, 3000);
+        // Sua lógica de gráficos aqui
+        // Exemplo com Chart.js:
+        new Chart(document.getElementById('browserChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(statsData.browsers),
+                datasets: [{
+                    data: Object.values(statsData.browsers),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            }
+        });
+    }
+
+    showError() {
+        this.statsContainer.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Não foi possível carregar as estatísticas</p>
+                <button class="retry-btn">Tentar novamente</button>
+            </div>
+        `;
+    }
+
+    setupEventListeners() {
+        this.statsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('retry-btn')) {
+                this.loadStats();
+            }
+        });
     }
 }

@@ -21,7 +21,7 @@ class App {
 
     async loadTemplate() {
         try {
-            const response = await fetch('/static/templates/main.html');
+            const response = await fetch('/templates/main.html');
             const html = await response.text();
             document.getElementById('app').innerHTML = html;
         } catch (error) {

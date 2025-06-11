@@ -84,6 +84,10 @@ http.Handle("/static/", http.StripPrefix("/static/",
 			// Serve o arquivo
 			http.FileServer(http.Dir(filepath.Join(frontendDir, "static"))).ServeHTTP(w, r)
 		})))
+	http.HandleFunc("/templates/", func(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/html")
+    http.ServeFile(w, r, filepath.Join(frontendDir, "templates", filepath.Base(r.URL.Path)))
+		})
 	// Handler para arquivos CSS (servindo da pasta css/)
 	http.Handle("/css/", http.StripPrefix("/css/",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

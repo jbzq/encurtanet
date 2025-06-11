@@ -1,8 +1,8 @@
 /* Importações */
-@import url('/static/css/components/form.css');
-@import url('/static/css/components/history.css');
-@import url('/static/css/components/stats.css');
-@import url('/static/css/utilities.css');
+@import url('/css/components/form.css');
+@import url('/css/components/history.css');
+@import url('/css/components/stats.css');
+@import url('/css/utilities.css');
 
 /* Estilos globais */
 * {
